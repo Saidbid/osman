@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Осман, добро пожаловать домой</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Prata&family=Rubik:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0d3a42;
+    --sea: #1d6b74;
+    --mist: #dcebe7;
+    --saffron: #e8a33d;
+    --ink: #0a2a30;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Rubik", system-ui, sans-serif;
+    background: var(--deep);
+    color: var(--mist);
+    line-height: 1.65;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1.25rem 9rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0d3a42 0%, #14525a 60%, #1d6b74 100%);
+  }
+  .arabic {
+    font-family: "Amiri", serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    color: var(--saffron);
+    margin-bottom: 1rem;
+    animation: rise 1.2s ease both;
+  }
+  .hero h1 {
+    font-family: "Prata", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(4rem, 19vw, 11rem);
+    line-height: 1;
+    letter-spacing: .01em;
+    color: #fff;
+  }
+  .hero p.sub {
+    margin-top: 1.25rem;
+    font-size: clamp(1rem, 3.2vw, 1.35rem);
+    max-width: 30ch;
+  }
+  .timer {
+    margin-top: 2rem;
+    display: none;
+    gap: 1.25rem;
+    justify-content: center;
+  }
+  .timer.on { display: flex; }
+  .timer div { min-width: 4rem; }
+  .timer b {
+    display: block;
+    font-family: "Prata", serif;
+    font-weight: 400;
+    font-size: 2rem;
+    color: var(--saffron);
+  }
+  .timer span { font-size: .85rem; }
+
+  /* Горы и море */
+  .scene { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 36%; min-height: 200px; }
+  .wave1 { animation: drift 14s ease-in-out infinite alternate; }
+  .wave2 { animation: drift 10s ease-in-out infinite alternate-reverse; }
+
+  @keyframes drift { from { transform: translateX(-3%); } to { transform: translateX(3%); } }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  /* CONTENT */
+  main { background: var(--mist); color: var(--ink); }
+  section { max-width: 44rem; margin: 0 auto; padding: 4.5rem 1.5rem; }
+  h2 {
+    font-family: "Prata", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 6vw, 2.6rem);
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    color: var(--deep);
+  }
+  section p { font-size: 1.1rem; max-width: 60ch; }
+  section p + p { margin-top: 1rem; }
+
+  .list { list-style: none; padding: 0; margin-top: 1rem; }
+  .list li {
+    padding: 1rem 1rem 1rem 1.25rem;
+    border-left: 3px solid var(--saffron);
+    margin-bottom: .75rem;
+    background: rgba(255,255,255,.45);
+  }
+
+  .sign {
+    margin-top: 2.5rem;
+    font-family: "Prata", serif;
+    font-size: 1.5rem;
+    color: var(--sea);
+  }
+
+  /* САЛЮТ */
+  .finale {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    background: var(--deep);
+    overflow: hidden;
+  }
+  .finale canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .finale button {
+    position: absolute;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    font: 500 1rem "Rubik", system-ui, sans-serif;
+    background: var(--saffron);
+    color: var(--ink);
+    border: 0;
+    border-radius: 999px;
+    padding: .85rem 1.75rem;
+    cursor: pointer;
+  }
+  .finale button:hover { background: #f0b758; }
+  .finale button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+  footer {
+    background: var(--deep);
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    font-family: "Amiri", serif;
+    font-size: 1.5rem;
+    color: var(--saffron);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wave1, .wave2, .arabic { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="arabic" lang="ar" dir="rtl">أهلاً وسهلاً</div>
+  <h1>Осман</h1>
+  <p class="sub">С возвращением домой из Махачкалы</p>
+
+  <div class="timer" id="timer" aria-live="polite">
+    <div><b id="d">0</b><span>дней</span></div>
+    <div><b id="h">0</b><span>часов</span></div>
+    <div><b id="m">0</b><span>минут</span></div>
+  </div>
+
+  <svg class="scene" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 300 L0 190 L120 110 L210 170 L330 60 L450 160 L540 120 L660 190 L780 90 L900 170 L1020 110 L1200 200 L1200 300 Z" fill="#0d3a42" opacity=".75"/>
+    <g class="wave1">
+      <path d="M-60 230 Q 60 200 180 230 T 420 230 T 660 230 T 900 230 T 1140 230 T 1380 230 L1380 300 L-60 300 Z" fill="#1d6b74"/>
+    </g>
+    <g class="wave2">
+      <path d="M-60 260 Q 60 235 180 260 T 420 260 T 660 260 T 900 260 T 1140 260 T 1380 260 L1380 300 L-60 300 Z" fill="#dcebe7"/>
+    </g>
+  </svg>
+</header>
+
+<main>
+  <section>
+    <h2>Мы ждали тебя</h2>
+    <p>Ты учился далеко от дома, и всё это время мы гордились тобой. Теперь ты возвращаешься, и этот сайт сделан специально для тебя.</p>
+    <p>Здесь ты можешь заменить этот текст на свои слова. Напиши, что хочешь сказать брату.</p>
+  </section>
+
+  <section style="padding-top:0">
+    <h2>Что тебя ждёт дома</h2>
+    <ul class="list">
+      <li>Семейный стол, накрытый по случаю твоего приезда</li>
+      <li>Все, кто скучал и ждал встречи</li>
+      <li>Рассказы о том, что было, пока тебя не было</li>
+    </ul>
+    <p class="sign">От твоего брата Saidbid</p>
+  </section>
+</main>
+
+<div class="finale" id="finale">
+  <canvas id="fw" aria-label="Салют с надписью Осман"></canvas>
+  <button id="again" type="button">Запустить ещё раз</button>
+</div>
+
+<footer lang="ar" dir="rtl">مرحباً بعودتك</footer>
+
+<script>
+  // Дата и время приезда. Пример: "2026-11-05T18:00:00"
+  // Оставь пустой строкой, чтобы счётчик не показывался.
+  const ARRIVAL = "";
+
+  if (ARRIVAL) {
+    const el = document.getElementById("timer");
+    const target = new Date(ARRIVAL).getTime();
+    const tick = () => {
+      const left = Math.max(0, target - Date.now());
+      document.getElementById("d").textContent = Math.floor(left / 864e5);
+      document.getElementById("h").textContent = Math.floor(left % 864e5 / 36e5);
+      document.getElementById("m").textContent = Math.floor(left % 36e5 / 6e4);
+    };
+    el.classList.add("on");
+    tick();
+    setInterval(tick, 30000);
+  }
+
+  // ===== САЛЮТ =====
+  (function () {
+    const WORD = "Осман";          // надпись в салюте
+    const BG = "13,58,66";         // цвет фона (тот же, что --deep)
+
+    const cv = document.getElementById("fw");
+    const ctx = cv.getContext("2d");
+    const finale = document.getElementById("finale");
+    let w = 0, h = 0;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      w = cv.clientWidth;
+      h = cv.clientHeight;
+      cv.width = w * dpr;
+      cv.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = "rgb(" + BG + ")";
+      ctx.fillRect(0, 0, w, h);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    const rockets = [];
+    const parts = [];
+    const HUES = [40, 170, 190, 20, 330, 55, 280];
+
+    function launch(tx, ty, isText) {
+      const x = isText ? w / 2 : tx + (Math.random() - 0.5) * 80;
+      rockets.push({
+        x: x, y: h, tx: tx, ty: ty, isText: !!isText,
+        hue: HUES[Math.floor(Math.random() * HUES.length)],
+        speed: 9 + Math.random() * 2
+      });
+    }
+
+    function burst(x, y, hue) {
+      const n = 90;
+      for (let i = 0; i < n; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const s = 1 + Math.random() * 4.5;
+        parts.push({
+          text: false, x: x, y: y,
+          vx: Math.cos(a) * s, vy: Math.sin(a) * s,
+          hue: hue + (Math.random() - 0.5) * 30,
+          age: 0, life: 60 + Math.random() * 40
+        });
+      }
+    }
+
+    function textBurst(cx, cy) {
+      const fs = Math.min(w * 0.22, 170);
+      const off = document.createElement("canvas");
+      const o = off.getContext("2d");
+      const font = "400 " + fs + "px Prata, Georgia, serif";
+      o.font = font;
+      const tw = Math.ceil(o.measureText(WORD).width) + 20;
+      off.width = tw;
+      off.height = Math.ceil(fs * 1.3);
+      o.font = font;
+      o.fillStyle = "#fff";
+      o.textBaseline = "middle";
+      o.fillText(WORD, 10, off.height / 2);
+      const data = o.getImageData(0, 0, off.width, off.height).data;
+      const step = Math.max(3, Math.round(fs / 32));
+      for (let y = 0; y < off.height; y += step) {
+        for (let x = 0; x < off.width; x += step) {
+          if (data[(y * off.width + x) * 4 + 3] > 128) {
+            parts.push({
+              text: true, x: cx, y: cy,
+              tx: cx - tw / 2 + x, ty: cy - off.height / 2 + y,
+              vx: (Math.random() - 0.5) * 2, vy: 0,
+              hue: 38 + Math.random() * 14,
+              age: 0, life: 230
+            });
+          }
+        }
+      }
+      burst(cx, cy, 45);
+    }
+
+    function update() {
+      for (let i = rockets.length - 1; i >= 0; i--) {
+        const r = rockets[i];
+        const dx = r.tx - r.x, dy = r.ty - r.y;
+        const d = Math.hypot(dx, dy);
+        if (d < r.speed) {
+          if (r.isText) textBurst(r.tx, r.ty); else burst(r.tx, r.ty, r.hue);
+          rockets.splice(i, 1);
+        } else {
+          r.x += dx / d * r.speed;
+          r.y += dy / d * r.speed;
+        }
+      }
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const p = parts[i];
+        p.age++;
+        if (p.age > p.life) { parts.splice(i, 1); continue; }
+        if (p.text) {
+          if (p.age < 80) {
+            p.x += (p.tx - p.x) * 0.09;
+            p.y += (p.ty - p.y) * 0.09;
+            p.alpha = 1;
+          } else if (p.age < 170) {
+            p.x = p.tx; p.y = p.ty;
+            p.alpha = 0.85 + Math.random() * 0.15;
+          } else {
+            p.vy += 0.06;
+            p.y += p.vy;
+            p.x += p.vx * 0.2;
+            p.alpha = 1 - (p.age - 170) / 60;
+          }
+        } else {
+          p.x += p.vx; p.y += p.vy;
+          p.vx *= 0.985;
+          p.vy = p.vy * 0.985 + 0.05;
+          p.alpha = 1 - p.age / p.life;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "rgba(" + BG + ",0.22)";
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = "lighter";
+      for (const r of rockets) {
+        ctx.fillStyle = "hsl(" + r.hue + ",100%,75%)";
+        ctx.fillRect(r.x - 1.5, r.y - 1.5, 3, 3);
+      }
+      for (const p of parts) {
+        const a = Math.max(0, p.alpha === undefined ? 1 : p.alpha);
+        ctx.fillStyle = "hsla(" + p.hue + ",100%," + (p.text ? 65 : 60) + "%," + a + ")";
+        const s = p.text ? 2.4 : 2;
+        ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
+      }
+    }
+
+    let raf = 0, timer = 0, n = 0, running = false;
+
+    function frame() {
+      if (!running) return;
+      update();
+      draw();
+      raf = requestAnimationFrame(frame);
+    }
+
+    function randomRocket() {
+      launch(w * (0.15 + Math.random() * 0.7), h * (0.12 + Math.random() * 0.3), false);
+    }
+    function textRocket() {
+      launch(w / 2, h * 0.4, true);
+    }
+
+    function step() {
+      n++;
+      if (n % 9 === 3) textRocket();
+      else { randomRocket(); if (Math.random() < 0.5) randomRocket(); }
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      n = 0;
+      randomRocket();
+      randomRocket();
+      timer = setInterval(step, 1000);
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      clearInterval(timer);
+      cancelAnimationFrame(raf);
+    }
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!reduce && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries[0].isIntersecting ? start() : stop();
+      }, { threshold: 0.4 }).observe(finale);
+    }
+
+    document.getElementById("again").addEventListener("click", function () {
+      if (!running) {
+        running = true;
+        raf = requestAnimationFrame(frame);
+        setTimeout(function () { if (!timer) stop(); }, 20000);
+      }
+      textRocket();
+    });
+  })();
+</script>
+</body>
+</html>
